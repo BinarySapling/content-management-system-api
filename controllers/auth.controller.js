@@ -81,6 +81,12 @@ export const login = async (req, res) => {
     }
 
     const result = await loginService(email, password);
+    res.cookie("token", result.token, {
+      httpOnly: true,
+      secure: false, // true in production
+      sameSite: "lax",
+      maxAge: 60 * 60 * 1000 // 1 hour
+    })
 
     res.status(200).json({
       success: true,
@@ -96,9 +102,4 @@ export const login = async (req, res) => {
 };
 
 
-// //cookies version  
-
-
-
-
-
+// //cookies version

@@ -80,37 +80,39 @@ export const verifySignupOtpService = async ({
 
 
 
-// export const loginService = async (email, password) => {
-//   const user = await User
-//     .findOne({ email })
-//     .select("+password");
+export const loginService = async (email, password) => {
+  const user = await User
+    .findOne({ email })
+    .select("+password");
 
-//   if (!user) {
-//     throw new Error("Invalid email or password");
-//   }
+  if (!user) {
+    throw new Error("Invalid email or password");
+  }
 
-//   const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, user.password);
 
-//   if (!isMatch) {
-//     throw new Error("Invalid email or password");
-//   }
+  if (!isMatch) {
+    throw new Error("Invalid email or password");
+  }
 
-//   const token = jwt.sign(
-//     {
-//       id: user._id,
-//       role: user.role
-//     },
-//     process.env.JWT_SECRET,
-//     { expiresIn: "1h" }
-//   );
+  const token = jwt.sign(
+    {
+      id: user._id,
+      role: user.role
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+  console.log(token);
+  
 
-//   return {
-//     token,
-//     user: {
-//       id: user._id,
-//       name: user.name,
-//       email: user.email,
-//       role: user.role
-//     }
-//   };
-// };
+  return {
+    token,
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    }
+  };
+};
