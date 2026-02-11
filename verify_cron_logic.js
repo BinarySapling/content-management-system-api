@@ -33,18 +33,22 @@ const verifyCron = async () => {
             content: "Content",
             status: "DRAFT",
             author: new mongoose.Types.ObjectId(), // Fake ID
-            updatedAt: new Date(Date.now() - 31 * 24 * 60 * 60 * 1000) // 31 days ago
         });
+        oldDraft.updatedAt = new Date(Date.now() - 31 * 24 * 60 * 60 * 1000);
+        await oldDraft.save({ timestamps: false });
 
         const newDraft = await Artifact.create({
             title: "New Draft",
             content: "Content",
             status: "DRAFT",
             author: new mongoose.Types.ObjectId(),
-            updatedAt: new Date(Date.now() - 29 * 24 * 60 * 60 * 1000) // 29 days ago
         });
+        newDraft.updatedAt = new Date(Date.now() - 29 * 24 * 60 * 60 * 1000);
+        await newDraft.save({ timestamps: false });
 
         console.log("Created test artifacts:", { oldDraft: oldDraft._id, newDraft: newDraft._id });
+        console.log("Old Draft UpdateAt:", oldDraft.updatedAt);
+        console.log("New Draft UpdateAt:", newDraft.updatedAt);
 
         // Run the cron logic
         await checkAndArchive();
@@ -53,13 +57,25 @@ const verifyCron = async () => {
         const oldDraftCheck = await Artifact.findById(oldDraft._id);
         const newDraftCheck = await Artifact.findById(newDraft._id);
 
-        console.log("Old Draft Status:", oldDraftCheck.status); // Should be ARCHIVED
-        console.log("New Draft Status:", newDraftCheck.status); // Should be DRAFT
+        let success = true;
+        if (oldDraftCheck.status !== "ARCHIVED") {
+            console.error("FAILURE: Old draft was not archived. Status:", oldDraftCheck.status);
+            success = false;
+        }
+        if (newDraftCheck.status !== "DRAFT") {
+            console.error("FAILURE: New draft was archived. Status:", newDraftCheck.status);
+            success = false;
+        }
+
+        if (success) {
+            console.log("VERIFICATION SUCCESS");
+        } else {
+            console.log("VERIFICATION FAILURE");
+        }
 
         // Cleanup
         await Artifact.findByIdAndDelete(oldDraft._id);
         await Artifact.findByIdAndDelete(newDraft._id);
-        console.log("Cleanup complete");
 
         mongoose.disconnect();
 
