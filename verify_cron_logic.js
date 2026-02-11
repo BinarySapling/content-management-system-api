@@ -1,13 +1,30 @@
 import mongoose from "mongoose";
 import Artifact from "./models/artifact.js";
 import { checkAndArchive } from "./cron/archiveArtifacts.js";
-import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 
-dotenv.config();
+// Load env manullay
+if (fs.existsSync(".env")) {
+    const envConfig = fs.readFileSync(".env", "utf-8");
+    envConfig.split(/\r?\n/).forEach((line) => {
+        const parts = line.split("=");
+        const key = parts.shift();
+        let value = parts.join("=");
+        if (key && value) {
+            value = value.trim();
+            if (value.startsWith('"') && value.endsWith('"')) {
+                value = value.slice(1, -1);
+            }
+            process.env[key.trim()] = value;
+        }
+    });
+}
+console.log("MONGO_URI Length:", process.env.MONGO_URI ? process.env.MONGO_URI.length : "undefined");
 
 const verifyCron = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        await mongoose.connect(process.env.MONGO_URI);
         console.log("Connected to DB");
 
         // Create test artifacts
