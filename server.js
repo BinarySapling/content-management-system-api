@@ -5,10 +5,14 @@ dotenv.config();
 import app from "./app.js";
 import connectDB from "./config/db.js";
 import "./config/cloudinary.js";
+import { archiveOldDrafts } from "./cron/archiveArtifacts.js";
 
 const PORT = process.env.PORT || 3000;
 
 connectDB();
+
+// Initialize Cron Jobs
+archiveOldDrafts();
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
