@@ -7,7 +7,7 @@ export const toggleLike = async (req, res) => {
   try {
     const result = await toggleLikeService({
       artifactId: req.params.id,
-      userId: req.user._id, 
+      userId: req.user.id,
     });
 
     res.status(200).json({
