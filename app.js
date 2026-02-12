@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.route.js";
 import artifactRoutes from "./routes/artifacts.route.js";
+import chatRoutes from "./routes/chat.route.js"
 import cookieParser from "cookie-parser";
 import webhookRoutes from "./webhook/webhook.js"
 const app = express();
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/artifacts", artifactRoutes);
 app.use("/webhook",webhookRoutes);
+app.use("/chat",chatRoutes)
 
 export default app;
 // app.use(cors({
