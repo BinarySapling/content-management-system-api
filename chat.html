@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Chat Test</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background-color: #f4f4f9; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        input, button { padding: 12px; margin: 8px 0; width: 100%; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #0056b3; }
+        #messages { border: 1px solid #ddd; height: 350px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; background: #fafafa; border-radius: 4px; }
+        .message { margin-bottom: 8px; padding: 8px 12px; border-radius: 15px; display: inline-block; max-width: 80%; clear: both; }
+        .message.sent { background-color: #d1e7dd; float: right; color: #0f5132; }
+        .message.received { background-color: #e2e3e5; float: left; color: #41464b; align-self: flex-start; }
+        .timestamp { font-size: 0.75em; color: #888; margin-left: 5px; }
+        #chat-section { display: none; }
+        .clearfix::after { content: ""; clear: both; display: table; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>CMS Chat Test</h2>
+        
+        <!-- Login Section -->
+        <div id="login-section">
+            <p>Enter your User ID (MongoDB ObjectID) to connect:</p>
+            <input type="text" id="userId" placeholder="Your User ID">
+            <button onclick="login()">Connect</button>
+        </div>
+
+        <!-- Chat Section -->
+        <div id="chat-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span>Logged in as: <strong id="currentUserId"></strong></span>
+                <span id="connectionStatus" style="color: red;">● Disconnected</span>
+            </div>
+            
+            <div id="messages"></div>
+            
+            <input type="text" id="receiverId" placeholder="Receiver User ID (MongoDB ObjectID)">
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send Message</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <script>
+        const socket = io("http://localhost:3000"); // Ensure port matches your server
+        let myId = "";
+
+        // Connection Events
+        socket.on("connect", () => {
+            console.log("Connected to server:", socket.id);
+            updateStatus(true);
+            if(myId) socket.emit("user-online", myId);
+        });
+
+        socket.on("disconnect", () => {
+            console.log("Disconnected from server");
+            updateStatus(false);
+        });
+
+        // Listen for incoming messages
+        socket.on("receive-message", (data) => {
+            console.log("Received:", data);
+            const msgText = data.message;
+            const senderName = data.sender && data.sender.name ? data.sender.name : "Unknown Sender";
+            displayMessage(msgText, 'received', senderName);
+        });
+
+        function login() {
+            const inputId = document.getElementById("userId").value.trim();
+            if (inputId) {
+                myId = inputId;
+                socket.emit("user-online", myId);
+                
+                document.getElementById("login-section").style.display = "none";
+                document.getElementById("chat-section").style.display = "block";
+                document.getElementById("currentUserId").innerText = myId;
+            } else {
+                alert("Please enter a valid User ID.");
+            }
+        }
+
+        function sendMessage() {
+            const receiverId = document.getElementById("receiverId").value.trim();
+            const message = document.getElementById("messageInput").value.trim();
+
+            if (receiverId && message) {
+                // Emit to server
+                socket.emit("send-message", {
+                    senderId: myId,
+                    receiverId: receiverId,
+                    message: message
+                });
+
+                // Display visually
+                displayMessage(message, 'sent', "Me");
+                document.getElementById("messageInput").value = "";
+            } else {
+                alert("Please enter both Receiver ID and a Message.");
+            }
+        }
+
+        function displayMessage(text, type, senderName) {
+            const messagesDiv = document.getElementById("messages");
+            const messageEl = document.createElement("div");
+            
+            const senderLabel = senderName ? `<div style="font-size: 0.8em; color: #666; margin-bottom: 2px;">${senderName}</div>` : '';
+            
+            messageEl.innerHTML = `<div class="message ${type}">
+                ${senderLabel}
+                ${text}
+            </div><div class="clearfix"></div>`;
+            
+            messagesDiv.appendChild(messageEl);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function updateStatus(isOnline) {
+            const statusEl = document.getElementById("connectionStatus");
+            if (isOnline) {
+                statusEl.innerHTML = "● Connected";
+                statusEl.style.color = "green";
+            } else {
+                statusEl.innerHTML = "● Disconnected";
+                statusEl.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
