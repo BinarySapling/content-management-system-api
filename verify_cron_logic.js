@@ -4,7 +4,7 @@ import { checkAndArchive } from "./cron/archiveArtifacts.js";
 import fs from "fs";
 import path from "path";
 
-// Load env manullay
+
 if (fs.existsSync(".env")) {
     const envConfig = fs.readFileSync(".env", "utf-8");
     envConfig.split(/\r?\n/).forEach((line) => {
@@ -27,12 +27,11 @@ const verifyCron = async () => {
         await mongoose.connect(process.env.MONGO_URI);
         console.log("Connected to DB");
 
-        // Create test artifacts
         const oldDraft = await Artifact.create({
             title: "Old Draft",
             content: "Content",
             status: "DRAFT",
-            author: new mongoose.Types.ObjectId(), // Fake ID
+            author: new mongoose.Types.ObjectId(),
         });
         oldDraft.updatedAt = new Date(Date.now() - 31 * 24 * 60 * 60 * 1000);
         await oldDraft.save({ timestamps: false });
@@ -50,10 +49,8 @@ const verifyCron = async () => {
         console.log("Old Draft UpdateAt:", oldDraft.updatedAt);
         console.log("New Draft UpdateAt:", newDraft.updatedAt);
 
-        // Run the cron logic
         await checkAndArchive();
 
-        // Verify results
         const oldDraftCheck = await Artifact.findById(oldDraft._id);
         const newDraftCheck = await Artifact.findById(newDraft._id);
 
@@ -73,10 +70,8 @@ const verifyCron = async () => {
             console.log("VERIFICATION FAILURE");
         }
 
-        // Cleanup
         await Artifact.findByIdAndDelete(oldDraft._id);
-        await Artifact.findByIdAndDelete(newDraft._id);
-
+        
         mongoose.disconnect();
 
     } catch (error) {

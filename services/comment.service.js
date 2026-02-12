@@ -1,29 +1,18 @@
-import Like from "../models/likes.js";
+import Comment from "../models/comment.js";
 
-export const toggleLikeService = async ({ artifactId, userId }) => {
-  const existingLike = await Like.findOne({
+export const addCommentService = async ({ artifactId, userId, content }) => {
+  const comment = await Comment.create({
     artifact: artifactId,
-    user: userId
+    user: userId,
+    content
   });
-
-  if (existingLike) {
-    await Like.deleteOne({ _id: existingLike._id });
-    return { liked: false };
-  }
-
-  await Like.create({
-    artifact: artifactId,
-    user: userId
-  });
-
-  return { liked: true };
+  await comment.populate("user", "name email");
+  return comment;
 };
 
-
-
-
-
-export const getLikeCountService = async (artifactId) => {
-  const count = await Like.countDocuments({ artifact: artifactId });
-  return count;
+export const getCommentsService = async (artifactId) => {
+  const comments = await Comment.find({ artifact: artifactId })
+    .populate("user", "name email")
+    .sort({ createdAt: -1 });
+  return comments;
 };

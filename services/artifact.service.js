@@ -17,8 +17,6 @@ export const createArtifactService = async (data) => {
       data.media = mediaUrl;
     } catch (error) {
       console.error("Cloudinary upload failed:", error);
-      // Fallback: keep local path or throw error? For now, let's keep local path but log error
-      // data.media remains properly set to local path which is fine to save if upload fails
     }
   }
 
