@@ -4,6 +4,7 @@ import morgan from "morgan";
 import authRoutes from "./routes/auth.route.js";
 import artifactRoutes from "./routes/artifacts.route.js";
 import cookieParser from "cookie-parser";
+import webhookRoutes from "./webhook/webhook.js"
 const app = express();
 
 /* Middlewares */
@@ -23,8 +24,9 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/artifacts", artifactRoutes);
-export default app;
+app.use("/webhook",webhookRoutes);
 
+export default app;
 // app.use(cors({
 //   origin: ["https://cms-admin.vercel.app"],
 //   credentials: true
