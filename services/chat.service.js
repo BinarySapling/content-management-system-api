@@ -31,6 +31,9 @@ export const sendChatService = async ({
         sender: senderId,
         message
     });
+
+    await newChat.populate("sender", "name email");
+
     thread.lastMessage = message;
     thread.lastMessageAt = new Date();
     await thread.save();
