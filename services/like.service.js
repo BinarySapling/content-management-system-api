@@ -2,7 +2,6 @@ import Like from "../models/like.js";
 import Artifact from "../models/artifact.js";
 
 export const toggleLikeService = async ({ artifactId, userId }) => {
-  // Check if artifact exists
   const artifactExists = await Artifact.findById(artifactId);
   if (!artifactExists) {
     throw new Error("Artifact not found");

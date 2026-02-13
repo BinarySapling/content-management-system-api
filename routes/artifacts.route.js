@@ -4,14 +4,13 @@ import {
   getAllArtifacts,
 } from "../controllers/artifact.controller.js";
 import { toggleLike, getLikes } from "../controllers/likes.controller.js";
+import { addComment, getComments } from "../controllers/comment.controller.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 import { authorizeRoles } from "../middleware/role.middleware.js";
 import { upload } from "../middleware/uploads.middleware.js";
 import apilimiter from "../middleware/ratelimiter.middleware.js";
 const router = express.Router();
 
-// Apply auth middleware to protect these routes
-// Only ADMIN and EDITOR can create artifacts
 router.post(
   "/",
   authMiddleware,
@@ -21,8 +20,10 @@ router.post(
 );
 router.get("/",apilimiter, authMiddleware, getAllArtifacts);
 
-// Like routes
 router.post("/:id/like", authMiddleware, toggleLike);
 router.get("/:id/likes", getLikes);
+
+router.post("/:id/comments", authMiddleware, addComment);
+router.get("/:id/comments", getComments);
 
 export default router;
