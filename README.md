@@ -279,7 +279,7 @@ Ensure all environment variables are properly configured in your deployment plat
 - `CLOUDINARY_API_SECRET`
 
 ### Recommended Platforms
-- **Heroku**: Add MongoDB Atlas and Cloudinary add-ons
+- **Heroku**: Add MongoDB Atlas and Cloudinary add-ons  
 - **Render**: Configure environment groups
 - **Railway**: Auto-deployment from GitHub
 - **AWS EC2**: Full control deployment
@@ -325,19 +325,6 @@ npm test
 
 This project is licensed under the ISC License.
 
-## Author
 
-**Parv Aggarwal**
-- GitHub: [@Parvaggarwal01](https://github.com/Parvaggarwal01)
-
-## Bug Reports & Feature Requests
-
-Please use the [GitHub Issues](https://github.com/Parvaggarwal01/content-management-system-api/issues) page to report bugs or request features.
-
-## Support
-
-For support, email your queries or open an issue in the repository.
-
----
 
 **Built with Node.js and Express**
