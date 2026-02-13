@@ -2,7 +2,7 @@
 
 A robust Node.js-based RESTful API for managing digital content artifacts with real-time chat functionality, role-based access control, and automated content lifecycle management.
 
-## 🚀 Features
+## Features
 
 ### Core Functionality
 - **Artifact Management**: Create, read, and manage digital content artifacts (DRAFT, PUBLISHED, ARCHIVED statuses)
@@ -21,13 +21,13 @@ A robust Node.js-based RESTful API for managing digital content artifacts with r
 - Request logging with Morgan
 - Input validation and error handling
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Node.js (v14 or higher)
 - MongoDB database
 - Cloudinary account (for media uploads)
 
-## 🛠️ Installation
+## Installation
 
 1. **Clone the repository**
    ```bash
@@ -61,7 +61,7 @@ A robust Node.js-based RESTful API for managing digital content artifacts with r
 
    The server will run on `http://localhost:3000` (or your configured PORT)
 
-## 📚 API Documentation
+## API Documentation
 
 ### Authentication Routes (`/auth`)
 
@@ -161,7 +161,7 @@ Real-time chat functionality via Socket.IO WebSocket connection.
 
 Custom webhook endpoints for external integrations.
 
-## 👥 User Roles
+## User Roles
 
 | Role       | Permissions                                  |
 | ---------- | -------------------------------------------- |
@@ -169,7 +169,7 @@ Custom webhook endpoints for external integrations.
 | **EDITOR** | Create and edit artifacts                    |
 | **VIEWER** | Read-only access to published content        |
 
-## 🗄️ Database Models
+## Database Models
 
 ### User Schema
 - `name`: String (required)
@@ -197,14 +197,14 @@ Custom webhook endpoints for external integrations.
 - `artifact`: ObjectId ref Artifact
 - `timestamps`: createdAt, updatedAt
 
-## ⏰ Automated Tasks
+## Automated Tasks
 
 ### Archive Old Drafts Cron Job
 **Schedule**: Every 12 hours (`0 */12 * * *`)
 
 **Function**: Automatically archives draft artifacts that haven't been updated in 30+ days
 
-## 🔒 Security Features
+## Security Features
 
 - **JWT Authentication**: Secure token-based authentication
 - **HTTP-only Cookies**: Prevents XSS attacks
@@ -213,11 +213,11 @@ Custom webhook endpoints for external integrations.
 - **Role-based Authorization**: Granular access control
 - **CORS Protection**: Configured cross-origin resource sharing
 
-## 🌐 WebSocket Events (Socket.IO)
+## WebSocket Events (Socket.IO)
 
 Real-time bidirectional communication for chat functionality. Custom socket handlers are registered in `/sockets/socket.js`.
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 content-management-system-api/
@@ -267,7 +267,7 @@ content-management-system-api/
 └── package.json
 ```
 
-## 🚀 Deployment
+## Deployment
 
 ### Environment Variables Required
 Ensure all environment variables are properly configured in your deployment platform:
@@ -285,13 +285,13 @@ Ensure all environment variables are properly configured in your deployment plat
 - **AWS EC2**: Full control deployment
 - **DigitalOcean**: App Platform or Droplets
 
-## 🧪 Testing
+## Testing
 
 ```bash
 npm test
 ```
 
-## 📝 Scripts
+## Scripts
 
 ```json
 {
@@ -300,7 +300,7 @@ npm test
 }
 ```
 
-## 🛡️ Technologies Used
+## Technologies Used
 
 - **Runtime**: Node.js
 - **Framework**: Express.js v5
@@ -313,7 +313,7 @@ npm test
 - **Task Scheduling**: node-cron
 - **Environment**: dotenv
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
@@ -321,23 +321,23 @@ npm test
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the ISC License.
 
-## 👨‍💻 Author
+## Author
 
 **Parv Aggarwal**
 - GitHub: [@Parvaggarwal01](https://github.com/Parvaggarwal01)
 
-## 🐛 Bug Reports & Feature Requests
+## Bug Reports & Feature Requests
 
 Please use the [GitHub Issues](https://github.com/Parvaggarwal01/content-management-system-api/issues) page to report bugs or request features.
 
-## 📞 Support
+## Support
 
 For support, email your queries or open an issue in the repository.
 
 ---
 
-**Built with ❤️ using Node.js and Express**
+**Built with Node.js and Express**
